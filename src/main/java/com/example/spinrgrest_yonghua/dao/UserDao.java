@@ -5,11 +5,14 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 @Repository
 public class UserDao extends AbstractDao<User>{
+
+
 
 	public UserDao() {
 		super.setClazz(User.class);

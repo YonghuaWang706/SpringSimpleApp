@@ -36,6 +36,8 @@ public class JwtFilter extends OncePerRequestFilter {
 			); // generate authentication object
 
 			SecurityContextHolder.getContext().setAuthentication(authentication); // put authentication object in the secruitycontext
+		}else{
+			response.sendError(401,"unauthorized user");
 		}
 
 		filterChain.doFilter(request, response);
