@@ -4,9 +4,9 @@ import com.example.spinrgrest_yonghua.domain.User;
 import com.example.spinrgrest_yonghua.domain.UserDetail;
 import com.example.spinrgrest_yonghua.dto.AllUserInfo;
 import com.example.spinrgrest_yonghua.dto.SingleUserResponse;
+import com.example.spinrgrest_yonghua.exception.UserNotFoundException;
 import com.example.spinrgrest_yonghua.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,11 +43,6 @@ public class UserAccountController {
 		this.service = service;
 	}
 
-	@GetMapping("/test")
-	public Object getAuthUserDetail(){
-		return SecurityContextHolder.getContext().getAuthentication();
-	}
-
 
 	@GetMapping
 	public List<AllUserInfo> getAllUsers(){
@@ -65,17 +60,19 @@ public class UserAccountController {
 	}
 
 	@DeleteMapping
-	public String deleteUser(@RequestParam(name = "userID") Long id){
+	public String deleteUser(@RequestParam(name = "userID") Long id) throws UserNotFoundException {
 		int code = service.deleteUser(id);
 		if(code == 1) return "delete successful!";
-		return "user does not exist";
+		throw new UserNotFoundException("user with id " + id + "not exists, delete fails");
+		//return "user does not exist";
 	}
 
 	@PatchMapping(path = "/{userId}/status")
-	public String updateUserStatus(@PathVariable(name = "userId") Long id, @RequestParam(name = "status") boolean status){
+	public String updateUserStatus(@PathVariable(name = "userId") Long id, @RequestParam(name = "status") boolean status) throws UserNotFoundException {
 		int code = service.updateStatus(status, id);
 		if(code == 1) return "update successful!";
-		return "user does not exist";
+		throw new UserNotFoundException("user with id " + id + "not exists, update fails");
+		//return "user does not exist";
 	}
 
 	@GetMapping(path = "/info/{userId}")
